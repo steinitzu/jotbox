@@ -1,0 +1,15 @@
+site_name: JotBox
+nav:
+  - Home: index.md
+  - Payload model: payload-model.md
+  - Configuration: config.md
+  - Whitelist and revoke tokens: whitelist-and-revoke-tokens.md
+theme:
+  name: material
+  palette:
+    primary: teal
+    accent: amber
+markdown_extensions:
+  - markdown_include.include
+  - codehilite
+  - pymdownx.tasklist
