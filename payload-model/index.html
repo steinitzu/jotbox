@@ -15,7 +15,7 @@
     
     
       
-        <title>A - JotBox</title>
+        <title>Payload model - JotBox</title>
       
     
     
@@ -57,6 +57,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#the-payload-model" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -81,7 +86,7 @@
           </span>
           <span class="md-header-nav__topic md-ellipsis">
             
-              A
+              Payload model
             
           </span>
         </div>
@@ -165,6 +170,27 @@
       
       
 
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+    <a href="./" title="Payload model" class="md-nav__link md-nav__link--active">
+      Payload model
+    </a>
+    
+  </li>
+
+    
+      
+      
+      
+
 
   <li class="md-nav__item">
     <a href="../config/" title="Configuration" class="md-nav__link">
@@ -192,6 +218,21 @@
               </div>
             
             
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
           
           <div class="md-content">
             <article class="md-content__inner md-typeset">
@@ -201,9 +242,48 @@
                   
                 
                 
-                  <h1>A</h1>
-                
-                <p>I AM INCLUDED</p>
+                <h1 id="the-payload-model">The Payload model</h1>
+<p>The Payload is a <code>pydantic</code> model to control and validate
+the info that's encoded into the JWT.</p>
+<p>By default it contains the standard JWT claims: <code>jti</code>, <code>iat</code>, <code>exp</code> (optional)</p>
+<p>We can override it and customize like any pydantic model:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+
+<span class="kn">from</span> <span class="nn">jotbox</span> <span class="kn">import</span> <span class="n">Payload</span>
+
+<span class="k">class</span> <span class="nc">MyPayload</span><span class="p">(</span><span class="n">Payload</span><span class="p">):</span>
+    <span class="n">email</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">permissions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">exp</span><span class="p">:</span> <span class="nb">int</span>  <span class="c1"># Make expiration mandatory</span>
+</code></pre></div>
+
+
+<p>Pass this to jotbox and use it.</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">jotbox</span> <span class="kn">import</span> <span class="n">Jotbox</span>
+
+<span class="n">jot</span> <span class="o">=</span> <span class="n">Jotbox</span><span class="p">[</span><span class="n">MyPayload</span><span class="p">](</span>
+    <span class="n">encode_key</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;MY_SECRET_KEY&#39;</span><span class="p">],</span>
+    <span class="n">payload_type</span><span class="o">=</span><span class="n">MyPayload</span><span class="p">,</span>
+    <span class="n">expires_in</span><span class="o">=</span><span class="mi">3600</span><span class="p">,</span>
+    <span class="o">...</span>
+<span class="p">)</span>
+</code></pre></div>
+
+
+<blockquote>
+<p><strong>Note</strong>: the <code>[MyPayload]</code> part of <code>Jotbox[MyPayload]</code> is not required
+but gives you type safety and better code completion in your IDE</p>
+</blockquote>
+<p>Now we can create tokens with our extra fields</p>
+<div class="codehilite"><pre><span></span><code><span class="k">await</span> <span class="n">jot</span><span class="o">.</span><span class="n">create_token</span><span class="p">(</span>
+    <span class="n">email</span><span class="o">=</span><span class="s1">&#39;user@example.com&#39;</span><span class="p">,</span>
+    <span class="n">permissions</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;articles-read&#39;</span><span class="p">,</span> <span class="s1">&#39;articles-publish&#39;</span><span class="p">]</span>
+<span class="p">)</span>
+</code></pre></div>
+
+
+<p>The arguments passed to <code>create_token</code> are validated with your payload model
+so passing invalid/wrong type arguments will fail</p>
                 
               
               
@@ -218,6 +298,41 @@
       
         
 <footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href=".." title="Home" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Home
+              </div>
+            </div>
+          </a>
+        
+        
+          <a href="../config/" title="Configuration" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Configuration
+              </div>
+            </div>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
