@@ -198,8 +198,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../whitelist/" title="Whitelist" class="md-nav__link">
-      Whitelist
+    <a href="../whitelist-and-revoke-tokens/" title="Whitelist and revoke tokens" class="md-nav__link">
+      Whitelist and revoke tokens
     </a>
   </li>
 
@@ -263,12 +263,13 @@ It can be good to set this to a few seconds to account for clock skew.</p>
 <p><strong><code>expires_in</code></strong></p>
 <p>Default: <code>None</code></p>
 <p>Number of seconds of how long new tokens are valid for. By default tokens never expire.</p>
+<p>The expiry time is encoded in the JWT as <code>exp</code> claim.</p>
 </li>
 <li>
 <p><strong><code>idle_timeout</code></strong></p>
 <p>Default: <code>None</code></p>
 <p>Number of seconds before a token is deleted from whitelist due to inactivity.
-This can only be used when <a href="../whitelist/">whitelist</a> is provided.</p>
+This can only be used when <a href="./whitelist.md">whitelist</a> is provided.</p>
 </li>
 <li>
 <p><strong><code>whitelist</code></strong></p>
@@ -315,13 +316,13 @@ Whitelisting is disabled when not provided.</p>
           </a>
         
         
-          <a href="../whitelist/" title="Whitelist" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../whitelist-and-revoke-tokens/" title="Whitelist and revoke tokens" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-footer-nav__title">
               <div class="md-ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Whitelist
+                Whitelist and revoke tokens
               </div>
             </div>
             <div class="md-footer-nav__button md-icon">

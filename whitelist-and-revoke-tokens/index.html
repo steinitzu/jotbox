@@ -15,7 +15,7 @@
     
     
       
-        <title>Whitelist - JotBox</title>
+        <title>Whitelist and revoke tokens - JotBox</title>
       
     
     
@@ -58,7 +58,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#whitelist" class="md-skip">
+        <a href="#whitelist-and-revoke-tokens" class="md-skip">
           Skip to content
         </a>
       
@@ -86,7 +86,7 @@
           </span>
           <span class="md-header-nav__topic md-ellipsis">
             
-              Whitelist
+              Whitelist and revoke tokens
             
           </span>
         </div>
@@ -205,14 +205,14 @@
     
     
       <label class="md-nav__link md-nav__link--active" for="__toc">
-        Whitelist
+        Whitelist and revoke tokens
         <span class="md-nav__icon md-icon">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9h14V7H3v2m0 4h14v-2H3v2m0 4h14v-2H3v2m16 0h2v-2h-2v2m0-10v2h2V7h-2m0 6h2v-2h-2v2z"/></svg>
         </span>
       </label>
     
-    <a href="./" title="Whitelist" class="md-nav__link md-nav__link--active">
-      Whitelist
+    <a href="./" title="Whitelist and revoke tokens" class="md-nav__link md-nav__link--active">
+      Whitelist and revoke tokens
     </a>
     
       
@@ -320,16 +320,18 @@
                   
                 
                 
-                <h1 id="whitelist">Whitelist</h1>
-<p>You can use a <code>whitelist</code> with <code>Jotbox</code> to store the ID (<code>jti</code> ) of every token that's generated in a database.<br />
-When a token is verified by <code>Jotbox</code> it also verifies that it exists in the whitelist.<br />
-The token is removed from whitelist when it expires (if it has an expiry time)</p>
-<p>This gives you the ability to revoke tokens at any time before they expire.<br />
-The downside is that a database call is triggered every time a token is used but for many
-applications, that don't run at gigantic scale, this is a perfectly acceptable tradeoff.</p>
-<p>You can also use an <a href="#idle-timeout">idle timeout</a> to automatically revoke tokens that are not accessed for a time period.</p>
-<p>A redis implementation of the whitelist is included, but you can also <a href="#use-other-storage-backends">roll your own</a></p>
+                <h1 id="whitelist-and-revoke-tokens">Whitelist and revoke tokens</h1>
+<p>This optional feature gives you the option of revoking tokens on demand or after a
+certain <a href="#idle-timeout">idle timeout</a>. A revoked will fail verification.</p>
+<p>This requires a database backend to store tokens. Support for Redis is built in,
+but you can also roll your own.</p>
+<p>The whitelist works by storing the token ID (<code>jti</code>) every time you generate a token.
+The token is stored until its expiry time (<code>exp</code>) or idle timeout has elapsed
+(if your token have no expiry time and you don't use idle timeout they will be stored forever)</p>
+<p>When you call <code>Jotbox.verified_payload</code> it always checks the whitelist.
+If the token is not in whitelist it raises a <code>jotbox.RevokedTokenerror</code></p>
 <h2 id="use-the-redis-whitelist">Use the redis whitelist</h2>
+<p>The built in redis whitelist is simple to use. Import it like this:</p>
 <div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">jotbox.whitelist.redis</span> <span class="kn">import</span> <span class="n">RedisWhitelist</span>
 </code></pre></div>
 
@@ -363,23 +365,42 @@ is created, you can pass in an <code>aredis.StrictRedis</code> instance directly
 </code></pre></div>
 
 
+<p>To revoke a token (e.g. when a user logs out), pass the verified payload to <code>revoke_payload</code>:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">payload</span> <span class="o">=</span> <span class="k">await</span> <span class="n">jot</span><span class="o">.</span><span class="n">verified_payload</span><span class="p">(</span><span class="n">encoded_token</span><span class="p">)</span>
+<span class="k">await</span> <span class="n">jot</span><span class="o">.</span><span class="n">revoke_payload</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+</code></pre></div>
+
+
 <h2 id="idle-timeout">Idle timeout</h2>
-<p>When using a whitelist, you can set an idle timeout for your tokens.<br />
-This means that if the token is not accessed for a given number of seconds it will expire
-and can not be used anymore.<br />
-This is useful for example for session tokens, where you may want a login session to have a long or no expiry
-but still want the user to be automatically logged out after say 1 hour of inactivity.</p>
+<p>The idle timeout setting tells <code>jotbox</code> to automatically delete
+tokens from the whitelist after a number of seconds of inactivity.</p>
+<p>When used in conjunction with <code>expires_at</code> the token is removed from whitelist
+once either the idle timeout or expiry time elapses, whichever happens first.</p>
+<p>This can be particularly useful for login sessions as it allows you to automatically log out the user after a period of inactivity while still allowing a long total expiry time on the session.</p>
 <p>To use this you need to pass both <code>idle_timeout</code> argument to <code>Jotbox</code> along with <code>whitelist</code>:</p>
 <div class="codehilite"><pre><span></span><code><span class="n">jot</span> <span class="o">=</span> <span class="n">Jotbox</span><span class="p">[</span><span class="n">MyPayload</span><span class="p">](</span>
     <span class="o">...</span><span class="p">,</span>
+    <span class="n">expires_at</span><span class="o">=</span><span class="mi">3600</span><span class="o">*</span><span class="mi">24</span><span class="p">,</span> <span class="c1"># Expire after 24 hours when not idle</span>
     <span class="n">idle_timeout</span><span class="o">=</span><span class="mi">3600</span><span class="p">,</span> <span class="c1"># Revoke after 1 hour of inactivity</span>
     <span class="n">whitelist</span><span class="o">=</span><span class="n">my_whitelist</span>
 <span class="p">)</span>
 </code></pre></div>
 
 
-<p><code>Jotbox</code> will then call the <code>whitelist.touch(...)</code> method every time the token is accessed
-extending its expiry time until either idle timeout or token expiry time (whichever one comes first)</p>
+<div class="codehilite"><pre><span></span><code><span class="n">token</span> <span class="o">=</span> <span class="k">await</span> <span class="n">jot</span><span class="o">.</span><span class="n">create_token</span><span class="p">()</span>
+<span class="n">encoded_token</span> <span class="o">=</span> <span class="n">token</span><span class="o">.</span><span class="n">token</span>
+
+<span class="c1"># User sends the token in API call</span>
+<span class="n">valid_payload</span> <span class="o">=</span> <span class="k">await</span> <span class="n">jot</span><span class="o">.</span><span class="n">verified_payload</span><span class="p">(</span><span class="n">encoded_token</span><span class="p">)</span>
+<span class="c1"># Success</span>
+
+<span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3601</span><span class="p">)</span> <span class="c1"># No activity during idle timeout</span>
+
+<span class="k">await</span> <span class="n">jot</span><span class="o">.</span><span class="n">verified_payload</span><span class="p">(</span><span class="n">encoded_token</span><span class="p">)</span>
+<span class="c1"># raises RevokedTokenerror(...)</span>
+</code></pre></div>
+
+
 <h2 id="use-other-storage-backends">Use other storage backends</h2>
 <p>You don't have to use redis for your whitelist.
 You can create a subclass of the abstract class <code>jotbox.whitelist.base.BaseWhitelist</code> and use any database/storage method you want.</p>

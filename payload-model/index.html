@@ -205,8 +205,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../whitelist/" title="Whitelist" class="md-nav__link">
-      Whitelist
+    <a href="../whitelist-and-revoke-tokens/" title="Whitelist and revoke tokens" class="md-nav__link">
+      Whitelist and revoke tokens
     </a>
   </li>
 
@@ -246,7 +246,8 @@
 <p>The Payload is a <code>pydantic</code> model to control and validate
 the info that's encoded into the JWT.</p>
 <p>By default it contains the standard JWT claims: <code>jti</code>, <code>iat</code>, <code>exp</code> (optional)</p>
-<p>We can override it and customize like any pydantic model:</p>
+<p>You can override it and customize like any pydantic model.
+E.g. add some user info and make expiry mandatory:</p>
 <div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
 
 <span class="kn">from</span> <span class="nn">jotbox</span> <span class="kn">import</span> <span class="n">Payload</span>
@@ -254,7 +255,7 @@ the info that's encoded into the JWT.</p>
 <span class="k">class</span> <span class="nc">MyPayload</span><span class="p">(</span><span class="n">Payload</span><span class="p">):</span>
     <span class="n">email</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">permissions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
-    <span class="n">exp</span><span class="p">:</span> <span class="nb">int</span>  <span class="c1"># Make expiration mandatory</span>
+    <span class="n">exp</span><span class="p">:</span> <span class="nb">int</span>
 </code></pre></div>
 
 
@@ -274,7 +275,7 @@ the info that's encoded into the JWT.</p>
 <p><strong>Note</strong>: the <code>[MyPayload]</code> part of <code>Jotbox[MyPayload]</code> is not required
 but gives you type safety and better code completion in your IDE</p>
 </blockquote>
-<p>Now we can create tokens with our extra fields</p>
+<p>Now you can create tokens with your extra fields</p>
 <div class="codehilite"><pre><span></span><code><span class="k">await</span> <span class="n">jot</span><span class="o">.</span><span class="n">create_token</span><span class="p">(</span>
     <span class="n">email</span><span class="o">=</span><span class="s1">&#39;user@example.com&#39;</span><span class="p">,</span>
     <span class="n">permissions</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;articles-read&#39;</span><span class="p">,</span> <span class="s1">&#39;articles-publish&#39;</span><span class="p">]</span>
@@ -283,7 +284,18 @@ but gives you type safety and better code completion in your IDE</p>
 
 
 <p>The arguments passed to <code>create_token</code> are validated with your payload model
-so passing invalid/wrong type arguments will fail</p>
+so passing invalid/wrong type arguments will fail.
+<code>exp</code> is added automatically by the <code>expires_in</code> setting
+on a case by case basis by passing your own timestamp:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="k">await</span> <span class="n">jot</span><span class="o">.</span><span class="n">create_token</span><span class="p">(</span>
+    <span class="n">email</span><span class="o">=</span><span class="s1">&#39;user@example.com&#39;</span><span class="p">,</span>
+    <span class="n">permissions</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;articles-read&#39;</span><span class="p">,</span> <span class="s1">&#39;articles-publish&#39;</span><span class="p">],</span>
+    <span class="n">exp</span><span class="o">=</span><span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1800</span><span class="p">)</span>
+<span class="p">)</span>
+</code></pre></div>
                 
               
               

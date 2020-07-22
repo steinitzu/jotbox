@@ -252,8 +252,8 @@
 
 
   <li class="md-nav__item">
-    <a href="whitelist/" title="Whitelist" class="md-nav__link">
-      Whitelist
+    <a href="whitelist-and-revoke-tokens/" title="Whitelist and revoke tokens" class="md-nav__link">
+      Whitelist and revoke tokens
     </a>
   </li>
 
@@ -326,9 +326,8 @@
 <ul class="task-list">
 <li class="task-list-item"><input type="checkbox" disabled checked/> Type safety</li>
 <li class="task-list-item"><input type="checkbox" disabled checked/> Secure JWT encoding and decoding using <a href="https://pyjwt.readthedocs.io">PyJWT</a></li>
-<li class="task-list-item"><input type="checkbox" disabled checked/> Optional token whitelist with pluggable storage backends (redis backend included)</li>
+<li class="task-list-item"><input type="checkbox" disabled checked/> Optional token <a href="whitelist-and-revoke-tokens">whitelist</a> with pluggable storage backends (redis backend included)</li>
 <li class="task-list-item"><input type="checkbox" disabled checked/> Idle timeout support (with whitelist)</li>
-<li class="task-list-item"><input type="checkbox" disabled/> Blacklist support (coming soon)</li>
 </ul>
 <h2 id="install">Install</h2>
 <div class="codehilite"><pre><span></span><code><span class="err">pip install jotbox</span>
@@ -356,6 +355,7 @@
     <span class="n">encode_key</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;MY_ENCODE_KEY&quot;</span><span class="p">],</span>
     <span class="n">payload_type</span><span class="o">=</span><span class="n">AccessPayload</span><span class="p">,</span>
     <span class="n">leeway</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">expires_in</span><span class="o">=</span><span class="mi">7200</span><span class="p">,</span>  <span class="c1"># Expire tokens after 2 hours (optional)</span>
     <span class="c1"># Whitelist is optional</span>
     <span class="n">idle_timeout</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span>  <span class="c1"># Revoke token after 10 minutes without use</span>
     <span class="n">whitelist</span><span class="o">=</span><span class="n">RedisWhitelist</span><span class="p">(</span><span class="s2">&quot;redis://localhost&quot;</span><span class="p">),</span>
@@ -377,7 +377,7 @@
     <span class="nb">print</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
     <span class="c1"># &gt;&gt; AccessPayload(jti=UUID(&#39;d682eabf-...&#39;), iat=1593638317, user_id=42)</span>
 
-    <span class="c1"># revoke the token (logout) (this requires blacklist or whitelist)</span>
+    <span class="c1"># revoke the token (logout) (this requires whitelist)</span>
     <span class="k">await</span> <span class="n">jot</span><span class="o">.</span><span class="n">revoke_payload</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
@@ -390,6 +390,9 @@
 <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
 <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">run</span><span class="p">())</span>
 </code></pre></div>
+
+
+<p>See all possible settings in the <a href="config">configuration</a> section</p>
                 
               
               

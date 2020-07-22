@@ -196,8 +196,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../whitelist/" title="Whitelist" class="md-nav__link">
-      Whitelist
+    <a href="../whitelist-and-revoke-tokens/" title="Whitelist and revoke tokens" class="md-nav__link">
+      Whitelist and revoke tokens
     </a>
   </li>
 
@@ -285,13 +285,7 @@ This can be used for example to support a secure logout in a web application.  <
 
 <h2 id="use-the-redis-blacklist">Use the redis blacklist</h2>
 <p><strong>NOTE:</strong> This requires <code>aredis</code> to be installed</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">jotbox.store.redis</span> <span class="kn">import</span> <span class="n">RedisBlacklist</span>
-<span class="kn">from</span> <span class="nn">jotbox</span> <span class="kn">import</span> <span class="n">Jotbox</span><span class="p">,</span> <span class="n">ExpiringPayload</span>
-
-
-<span class="k">class</span> <span class="nc">AccessTokens</span><span class="p">(</span><span class="n">Jotbox</span><span class="p">[</span><span class="n">ExpiringPayload</span><span class="p">]):</span>
-    <span class="o">...</span>
-    <span class="n">blacklist</span> <span class="o">=</span> <span class="n">RedisBlacklist</span><span class="p">[</span><span class="n">ExpiringPayload</span><span class="p">]</span><span class="o">.</span><span class="n">from_url</span><span class="p">(</span><span class="s2">&quot;redis://localhost&quot;</span><span class="p">)</span>
+<div class="codehilite"><pre><span></span><code>
 </code></pre></div>
 
 
@@ -299,30 +293,7 @@ This can be used for example to support a secure logout in a web application.  <
 <p>By default the token IDs are stored in redis with key prefix <code>"JB:BLACK:"</code>. You can change the prefix by passing <code>key_prefix="MY:PREFIX:"</code> when instantiating the blacklist.</p>
 <h2 id="use-the-database-blacklist">Use the database blacklist</h2>
 <p><strong>NOTE:</strong> This requires <code>databases</code> and <code>aiopg</code> to be installed. Currently only postgresql is supported.</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">MetaData</span>
-<span class="kn">from</span> <span class="nn">databases</span> <span class="kn">import</span> <span class="n">Database</span>
-
-<span class="kn">from</span> <span class="nn">jotbox.store.databases</span> <span class="kn">import</span> <span class="n">DatabaseBlacklist</span>
-<span class="kn">from</span> <span class="nn">jotbox</span> <span class="kn">import</span> <span class="n">Jotbox</span><span class="p">,</span> <span class="n">ExpiringPayload</span>
-
-<span class="n">db</span> <span class="o">=</span> <span class="n">Database</span><span class="p">(</span><span class="s2">&quot;postgresql+aiopg://localhost&quot;</span><span class="p">)</span>
-<span class="n">md</span> <span class="o">=</span> <span class="n">MetaData</span><span class="p">()</span>
-
-
-<span class="k">class</span> <span class="nc">AccessTokens</span><span class="p">(</span><span class="n">Jotbox</span><span class="p">[</span><span class="n">ExpiringPayload</span><span class="p">]):</span>
-    <span class="o">...</span>
-    <span class="n">blacklist</span> <span class="o">=</span> <span class="n">DatabaseBlacklist</span><span class="p">[</span><span class="n">ExpiringPayload</span><span class="p">]</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-        <span class="n">db</span><span class="p">,</span> <span class="n">table_name</span><span class="o">=</span><span class="s2">&quot;access_token_blacklist&quot;</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="n">md</span>
-    <span class="p">)</span>
-
-
-<span class="c1"># Create the table in database</span>
-<span class="c1"># You can also create your table as usual with alembic</span>
-
-<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">create_engine</span>
-
-<span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="s2">&quot;postgresql://localhost&quot;</span><span class="p">)</span>
-<span class="n">md</span><span class="o">.</span><span class="n">create_all</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
+<div class="codehilite"><pre><span></span><code>
 </code></pre></div>
 
 
