@@ -45,7 +45,7 @@ await jot.create_token(
 
 The arguments passed to `create_token` are validated with your payload model
 so passing invalid/wrong type arguments will fail.
-`exp` is added automatically by the `expires_in` setting
+`exp` is added automatically by the `expires_in` setting by you can override it
 on a case by case basis by passing your own timestamp:
 
 ```python3
