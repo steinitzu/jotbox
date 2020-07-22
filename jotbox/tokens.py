@@ -3,7 +3,8 @@ from typing import Generic, Dict, Any, Type, Sequence, Optional, cast
 from uuid import uuid4
 import time
 
-import jwt
+from jwt import decode as jwt_decode, encode as jwt_encode, PyJWTError
+
 
 from jotbox.types import EncodedToken, StrBytes, TPayload, Payload
 from jotbox.json import make_json_encoder
@@ -66,9 +67,11 @@ class Jotbox(Generic[TPayload]):
         until = self._create_until(payload.exp)
         await self.whitelist.add(payload, until)
 
-    async def create_token(self, **claims) -> EncodedToken[TPayload]:
-        payload = self.create_payload(**claims)
-        token = jwt.encode(
+    async def create_token(
+        self, _payload: Optional[TPayload] = None, **claims
+    ) -> EncodedToken[TPayload]:
+        payload = _payload or self.create_payload(**claims)
+        token = jwt_encode(
             payload.dict(exclude_unset=True),
             key=self.encode_key,
             algorithm=self.encode_algorithm,
@@ -79,7 +82,7 @@ class Jotbox(Generic[TPayload]):
 
     async def verified_payload(self, token: str, **jwt_kwargs) -> TPayload:
         try:
-            raw_payload = jwt.decode(
+            raw_payload = jwt_decode(
                 token,
                 key=self.decode_key,
                 algorithms=self.decode_algorithms,
@@ -87,7 +90,7 @@ class Jotbox(Generic[TPayload]):
                 leeway=self.leeway,
                 **jwt_kwargs,
             )
-        except jwt.PyJWTError as e:
+        except PyJWTError as e:
             raise TokenVerificationError("Failed to decode token") from e
         payload = self.payload_type(**raw_payload)
         await self._verify_whitelist(payload)
