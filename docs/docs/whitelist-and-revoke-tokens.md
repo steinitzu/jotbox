@@ -1,7 +1,7 @@
 # Whitelist and revoke tokens
 
 This optional feature gives you the option of revoking tokens on demand or after a
-certain [idle timeout](#idle-timeout). A revoked will fail verification.
+certain [idle timeout](#idle-timeout). A revoked token will fail verification.
 
 This requires a database backend to store tokens. Support for Redis is built in,
 but you can also roll your own.
