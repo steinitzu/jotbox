@@ -358,7 +358,7 @@ stateless JWTs or revokable tokens stored in a central whitelist.</p>
 <div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="kn">import</span> <span class="nn">secrets</span>
 
-<span class="kn">from</span> <span class="nn">jotbox</span> <span class="kn">import</span> <span class="n">Jotbox</span><span class="p">,</span> <span class="n">Payload</span><span class="p">,</span> <span class="n">TokenVerificationError</span>
+<span class="kn">from</span> <span class="nn">jotbox</span> <span class="kn">import</span> <span class="n">Jotbox</span><span class="p">,</span> <span class="n">Payload</span><span class="p">,</span> <span class="n">JWTDecodeError</span>
 <span class="kn">from</span> <span class="nn">jotbox.whitelist.redis</span> <span class="kn">import</span> <span class="n">RedisWhitelist</span>
 
 <span class="c1"># Define the payload model</span>
@@ -398,7 +398,7 @@ stateless JWTs or revokable tokens stored in a central whitelist.</p>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="k">await</span> <span class="n">jot</span><span class="o">.</span><span class="n">verified_payload</span><span class="p">(</span><span class="n">token</span><span class="o">.</span><span class="n">token</span><span class="p">)</span>
-    <span class="k">except</span> <span class="n">TokenVerificationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="k">except</span> <span class="n">JWTDecodeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
         <span class="c1"># &gt;&gt; RevokedTokenError(&#39;Token ID d682eabf-... has been revoked&#39;)</span>
 
