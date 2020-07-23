@@ -38,13 +38,13 @@ jobs:
         run: poetry install
 
       - name: Flake8
-        run: flake8 jotbox
+        run: poetry run flake8 jotbox
 
       - name: Black
-        run: black --check jotbox
+        run: poetry run black --check jotbox
 
       - name: MyPy
-        run: mypy jotbox
+        run: poetry run mypy jotbox
 
       - name: Run tests
         run: poetry run pytest -v --cov=jotbox tests/
