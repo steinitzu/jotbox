@@ -37,7 +37,7 @@
 
 * **`leeway`**
 
-    Default: 0
+    Default: `0` (no leeway)
 
     Number of seconds of leeway to allow when verifying things 
     like expiry times and idle timeouts.  
@@ -45,7 +45,7 @@
 
 * **`expires_in`**
 
-    Default: `None`
+    Default: `None` (no expiry)
 
     Number of seconds of how long new tokens are valid for. By default tokens never expire.
     
@@ -53,7 +53,7 @@
 
 * **`idle_timeout`**
 
-    Default: `None`
+    Default: `None` (no idle timeout)
 
     Number of seconds before a token is deleted from whitelist due to inactivity.
     This can only be used when [whitelist](./whitelist.md) is provided.
@@ -68,6 +68,6 @@
 
 * **`jwt_options`**
 
-    Default: `{}`
+    Default: `{}` (default pyjwt options)
 
     Dict of options forwarded to `PyJWT.decode` when verifying tokens.
