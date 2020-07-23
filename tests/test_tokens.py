@@ -68,7 +68,7 @@ class TestVerifiedPayload:
         token = await jot.create_token(payload)
 
         start = time.time()
-        with mock.patch.object(
+        with asyncmock.patch.object(
             redis_whitelist, "touch", autospec=True, return_value=payload_raw
         ) as m:
             _ = await jot.verified_payload(token.token)
