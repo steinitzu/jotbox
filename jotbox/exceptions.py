@@ -6,9 +6,5 @@ class JWTDecodeError(JotboxError):
     pass
 
 
-class TokenVerificationError(JotboxError):
-    pass
-
-
-class RevokedTokenError(TokenVerificationError):
+class RevokedTokenError(JWTDecodeError):
     pass

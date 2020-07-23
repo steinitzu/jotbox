@@ -1,7 +1,7 @@
 import asyncio
 import secrets
 
-from jotbox import Jotbox, Payload, TokenVerificationError
+from jotbox import Jotbox, Payload, JWTDecodeError
 from jotbox.whitelist.redis import RedisWhitelist
 
 # Define the payload model
@@ -41,7 +41,7 @@ async def run():
 
     try:
         await jot.verified_payload(token.token)
-    except TokenVerificationError as e:
+    except JWTDecodeError as e:
         print(repr(e))
         # >> RevokedTokenError('Token ID d682eabf-... has been revoked')
 

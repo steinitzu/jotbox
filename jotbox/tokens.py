@@ -9,7 +9,7 @@ from jwt import decode as jwt_decode, encode as jwt_encode, PyJWTError
 from jotbox.types import EncodedToken, StrBytes, TPayload, Payload
 from jotbox.json import make_json_encoder
 from jotbox.whitelist.base import Whitelist
-from jotbox.exceptions import TokenVerificationError, RevokedTokenError
+from jotbox.exceptions import JWTDecodeError, RevokedTokenError
 
 
 class Jotbox(Generic[TPayload]):
@@ -93,7 +93,7 @@ class Jotbox(Generic[TPayload]):
                 **jwt_kwargs,
             )
         except PyJWTError as e:
-            raise TokenVerificationError("Failed to decode token") from e
+            raise JWTDecodeError("Failed to decode token") from e
         payload = self.payload_type(**raw_payload)
         await self._verify_whitelist(payload)
         return payload

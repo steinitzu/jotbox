@@ -13,6 +13,5 @@ from jotbox.sessions import SessionBox
 from jotbox.exceptions import (
     JotboxError,
     JWTDecodeError,
-    TokenVerificationError,
     RevokedTokenError,
 )

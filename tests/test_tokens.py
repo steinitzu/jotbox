@@ -8,7 +8,7 @@ import pytest
 import asyncmock
 import jwt
 
-from jotbox import Jotbox
+from jotbox import Jotbox, JWTDecodeError, RevokedTokenError
 from jotbox import tokens
 
 KEY = token_urlsafe()
@@ -67,12 +67,37 @@ class TestVerifiedPayload:
         payload_raw = json.loads(payload.json(exclude_unset=True))
         token = await jot.create_token(payload)
 
+        start = time.time()
         with mock.patch.object(
-            tokens, "jwt_decode", autospec=True, return_value=payload_raw
+            redis_whitelist, "touch", autospec=True, return_value=payload_raw
         ) as m:
             _ = await jot.verified_payload(token.token)
+        now = time.time()
+        until = m.await_args[0][1]
 
-        raise NotImplementedError("Test not complete")
+        m.assert_awaited_once()
+        assert until >= start + jot.idle_timeout + jot.leeway
+        assert until <= now + jot.idle_timeout + jot.leeway
+
+    @pytest.mark.asyncio
+    async def test__pyjwt_error__raises_jwt_decode_error(self):
+        jot = Jotbox(encode_key=KEY, expires_in=-1)
+        token = await jot.create_token()
+
+        with pytest.raises(JWTDecodeError):
+            await jot.verified_payload(token)
+
+    @pytest.mark.asyncio
+    async def test__revoked_whitelist__raises_revoked_token_error(
+        self, redis_whitelist
+    ):
+        jot = Jotbox(encode_key=KEY, expires_in=30, whitelist=redis_whitelist)
+        token = await jot.create_token()
+
+        await jot.revoke_payload(token.payload)
+
+        with pytest.raises(RevokedTokenError):
+            await jot.verified_payload(token.token)
 
 
 class TestAddToWhitelist:

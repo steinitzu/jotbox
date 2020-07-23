@@ -39,12 +39,12 @@ class RedisWhitelist(Whitelist[TPayload]):
         await self.redis.delete(self.make_key(payload))
 
     def make_key(self, payload: TPayload) -> str:
-        return self.key_prefix + payload.jti.hex
+        return self.key_prefix + str(payload.jti)
 
 
 class SessionRedisWhitelist(RedisWhitelist[TSession], SessionWhitelist[TSession, TSub]):
     def make_key(self, payload: TSession) -> str:
-        return self.make_sub_key(payload.sub) + payload.jti.hex
+        return self.make_sub_key(payload.sub) + str(payload.jti)
 
     def make_sub_key(self, sub: TSub) -> str:
         return self.key_prefix + f"{sub}:"

@@ -15,7 +15,6 @@ class Whitelist(ABC, Generic[TPayload]):
 
         If `until` is `None` the token should not expire
         """
-        pass
 
     @abstractmethod
     async def exists(self, payload: TPayload) -> bool:
@@ -24,7 +23,6 @@ class Whitelist(ABC, Generic[TPayload]):
 
         return `True` if the token is valid and not expired, otherwise `False`
         """
-        pass
 
     @abstractmethod
     async def touch(self, payload: TPayload, until: DateTimeStamp) -> bool:
@@ -39,17 +37,17 @@ class Whitelist(ABC, Generic[TPayload]):
            `True` if the token is succesfully "touched"
            `False` if the token is not currently valid in the whitelist.
         """
-        pass
 
     @abstractmethod
     async def delete(self, delete: TPayload) -> None:
         """
         Immediately revoke the token from the whitelist
         """
-        pass
 
 
 class SessionWhitelist(Whitelist[TSession], Generic[TSession, TSub]):
     @abstractmethod
     async def delete_sub(self, sub: TSub) -> None:
-        pass
+        """
+        Delete all tokens with a given `sub` claim
+        """
