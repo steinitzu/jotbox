@@ -4,7 +4,7 @@ from typing import Type
 from jotbox.types import TPayload
 
 
-_JSON_ENCODERS = {}
+_JSON_ENCODERS: dict = {}
 
 
 def make_json_encoder(t: Type[TPayload]):

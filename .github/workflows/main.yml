@@ -33,8 +33,19 @@ jobs:
           key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
           restore-keys: |
             ${{ runner.os }}-poetry-
+
       - name: Install dependencies
         run: poetry install
+
+      - name: Flake8
+        run: flake8 jotbox
+
+      - name: Black
+        run: black --check jotbox
+
+      - name: MyPy
+        run: mypy jotbox
+
       - name: Run tests
         run: poetry run pytest -v --cov=jotbox tests/
         env:

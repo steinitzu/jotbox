@@ -1,4 +1,4 @@
-from typing import Union, Optional, Generic
+from typing import Union, Optional
 
 from aredis import StrictRedis
 

@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+
+set -e
+
+status=0
+echo "black --check jotbox/"
+black jotbox || status=1
+echo "mypy jotbox/"
+mypy jotbox || status=1
+echo "flake8 jotbox/"
+flake8 jotbox || status=1
+
+exit $status
