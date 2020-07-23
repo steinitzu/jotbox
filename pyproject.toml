@@ -6,8 +6,8 @@ authors = ["Steinthor Palsson <steini90@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.7"
-pydantic = "^1.5.1"
-pyjwt = "^1.7.1"
+pydantic = "^1"
+pyjwt = "^1"
 
 [tool.poetry.dev-dependencies]
 mypy = "^0.782"
