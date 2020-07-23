@@ -38,4 +38,4 @@ jobs:
       - name: Run tests
         run: poetry run pytest -v --cov=jotbox tests/
         env:
-          TEST_REDIS_URL: redis://127.0.0.1
+          TEST_REDIS_URI: redis://127.0.0.1
