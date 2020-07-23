@@ -193,8 +193,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../config/" title="Configuration" class="md-nav__link">
-      Configuration
+    <a href="../whitelist-and-revoke-tokens/" title="Whitelist and revoke tokens" class="md-nav__link">
+      Whitelist and revoke tokens
     </a>
   </li>
 
@@ -205,8 +205,20 @@
 
 
   <li class="md-nav__item">
-    <a href="../whitelist-and-revoke-tokens/" title="Whitelist and revoke tokens" class="md-nav__link">
-      Whitelist and revoke tokens
+    <a href="../sessions/" title="Login Sessions" class="md-nav__link">
+      Login Sessions
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../config/" title="Configuration" class="md-nav__link">
+      Configuration
     </a>
   </li>
 
@@ -243,8 +255,8 @@
                 
                 
                 <h1 id="the-payload-model">The Payload model</h1>
-<p>The Payload is a <code>pydantic</code> model to control and validate
-the info that's encoded into the JWT.</p>
+<p>The Payload is a <a href="https://pydantic-docs.helpmanual.io/"><code>pydantic</code></a> 
+model to control and validate the info that's encoded into JWTs.</p>
 <p>By default it contains the standard JWT claims: <code>jti</code>, <code>iat</code>, <code>exp</code> (optional)</p>
 <p>You can override it and customize like any pydantic model.
 E.g. add some user info and make expiry mandatory:</p>
@@ -329,13 +341,13 @@ on a case by case basis by passing your own timestamp:</p>
           </a>
         
         
-          <a href="../config/" title="Configuration" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../whitelist-and-revoke-tokens/" title="Whitelist and revoke tokens" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-footer-nav__title">
               <div class="md-ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Configuration
+                Whitelist and revoke tokens
               </div>
             </div>
             <div class="md-footer-nav__button md-icon">

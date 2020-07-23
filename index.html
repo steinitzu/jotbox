@@ -240,8 +240,8 @@
 
 
   <li class="md-nav__item">
-    <a href="config/" title="Configuration" class="md-nav__link">
-      Configuration
+    <a href="whitelist-and-revoke-tokens/" title="Whitelist and revoke tokens" class="md-nav__link">
+      Whitelist and revoke tokens
     </a>
   </li>
 
@@ -252,8 +252,20 @@
 
 
   <li class="md-nav__item">
-    <a href="whitelist-and-revoke-tokens/" title="Whitelist and revoke tokens" class="md-nav__link">
-      Whitelist and revoke tokens
+    <a href="sessions/" title="Login Sessions" class="md-nav__link">
+      Login Sessions
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="config/" title="Configuration" class="md-nav__link">
+      Configuration
     </a>
   </li>
 
@@ -320,14 +332,17 @@
                   
                 
                 
-                <h1 id="jotbox">JotBox</h1>
-<p>JotBox is an extended JWT toolkit for python.</p>
+                <h1 id="jotbox">Jotbox</h1>
+<p><code>Jotbox</code> is a library for generating and verifying JWTs in python
+providing a simple, safe and common interface for working with purely stateless JWTs or revokable tokens
+stored in a central whitelist.</p>
 <h2 id="features">Features</h2>
-<ul class="task-list">
-<li class="task-list-item"><input type="checkbox" disabled checked/> Type safety</li>
-<li class="task-list-item"><input type="checkbox" disabled checked/> Secure JWT encoding and decoding using <a href="https://pyjwt.readthedocs.io">PyJWT</a></li>
-<li class="task-list-item"><input type="checkbox" disabled checked/> Optional token <a href="whitelist-and-revoke-tokens">whitelist</a> with pluggable storage backends (redis backend included)</li>
-<li class="task-list-item"><input type="checkbox" disabled checked/> Idle timeout support (with whitelist)</li>
+<ul>
+<li>All JWT encoding and decoding is done using the de-facto standard <a href="https://pyjwt.readthedocs.io">PyJWT</a> under the hood</li>
+<li>Optional JWT whitelist for revokable tokens (pluggable storage backend)</li>
+<li>Redis whitelist support is built in using <a href="https://aredis.readthedocs.io/en/latest/">aredis</a></li>
+<li>Optional idle timeout support to revoke tokens that are not accessed for a given interval</li>
+<li>Type safe, using generics for an extendable JWT payload model</li>
 </ul>
 <h2 id="install">Install</h2>
 <div class="codehilite"><pre><span></span><code><span class="err">pip install jotbox</span>
@@ -340,23 +355,24 @@
 
 
 <h2 id="quickstart">Quickstart</h2>
-<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">asyncio</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">import</span> <span class="nn">secrets</span>
 
 <span class="kn">from</span> <span class="nn">jotbox</span> <span class="kn">import</span> <span class="n">Jotbox</span><span class="p">,</span> <span class="n">Payload</span><span class="p">,</span> <span class="n">TokenVerificationError</span>
 <span class="kn">from</span> <span class="nn">jotbox.whitelist.redis</span> <span class="kn">import</span> <span class="n">RedisWhitelist</span>
 
-
+<span class="c1"># Define the payload model</span>
 <span class="k">class</span> <span class="nc">AccessPayload</span><span class="p">(</span><span class="n">Payload</span><span class="p">):</span>
     <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span>
 
 
-<span class="n">jot</span> <span class="o">=</span> <span class="n">Jotbox</span><span class="p">[</span><span class="n">AccessPayload</span><span class="p">](</span>  <span class="c1"># Provide the payload type for static type safety</span>
-    <span class="n">encode_key</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;MY_ENCODE_KEY&quot;</span><span class="p">],</span>
+<span class="c1"># Create our Jotbox instance with some settings</span>
+<span class="n">jot</span> <span class="o">=</span> <span class="n">Jotbox</span><span class="p">[</span><span class="n">AccessPayload</span><span class="p">](</span>
+    <span class="n">encode_key</span><span class="o">=</span><span class="n">secrets</span><span class="o">.</span><span class="n">token_hex</span><span class="p">(),</span>
     <span class="n">payload_type</span><span class="o">=</span><span class="n">AccessPayload</span><span class="p">,</span>
     <span class="n">leeway</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
     <span class="n">expires_in</span><span class="o">=</span><span class="mi">7200</span><span class="p">,</span>  <span class="c1"># Expire tokens after 2 hours (optional)</span>
-    <span class="c1"># Whitelist is optional</span>
+    <span class="c1"># Whitelist is optional, skip this if you don&#39;t need revoke support</span>
     <span class="n">idle_timeout</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span>  <span class="c1"># Revoke token after 10 minutes without use</span>
     <span class="n">whitelist</span><span class="o">=</span><span class="n">RedisWhitelist</span><span class="p">(</span><span class="s2">&quot;redis://localhost&quot;</span><span class="p">),</span>
 <span class="p">)</span>
@@ -377,7 +393,7 @@
     <span class="nb">print</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
     <span class="c1"># &gt;&gt; AccessPayload(jti=UUID(&#39;d682eabf-...&#39;), iat=1593638317, user_id=42)</span>
 
-    <span class="c1"># revoke the token (logout) (this requires whitelist)</span>
+    <span class="c1"># revoke the token (logout)</span>
     <span class="k">await</span> <span class="n">jot</span><span class="o">.</span><span class="n">revoke_payload</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>

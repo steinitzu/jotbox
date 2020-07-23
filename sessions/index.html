@@ -15,7 +15,7 @@
     
     
       
-        <title>Whitelist and revoke tokens - JotBox</title>
+        <title>Login Sessions - JotBox</title>
       
     
     
@@ -58,7 +58,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#whitelist-and-revoke-tokens" class="md-skip">
+        <a href="#sessions" class="md-skip">
           Skip to content
         </a>
       
@@ -86,7 +86,7 @@
           </span>
           <span class="md-header-nav__topic md-ellipsis">
             
-              Whitelist and revoke tokens
+              Login Sessions
             
           </span>
         </div>
@@ -182,6 +182,18 @@
       
       
 
+
+  <li class="md-nav__item">
+    <a href="../whitelist-and-revoke-tokens/" title="Whitelist and revoke tokens" class="md-nav__link">
+      Whitelist and revoke tokens
+    </a>
+  </li>
+
+    
+      
+      
+      
+
   
 
 
@@ -193,14 +205,14 @@
     
     
       <label class="md-nav__link md-nav__link--active" for="__toc">
-        Whitelist and revoke tokens
+        Login Sessions
         <span class="md-nav__icon md-icon">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9h14V7H3v2m0 4h14v-2H3v2m0 4h14v-2H3v2m16 0h2v-2h-2v2m0-10v2h2V7h-2m0 6h2v-2h-2v2z"/></svg>
         </span>
       </label>
     
-    <a href="./" title="Whitelist and revoke tokens" class="md-nav__link md-nav__link--active">
-      Whitelist and revoke tokens
+    <a href="./" title="Login Sessions" class="md-nav__link md-nav__link--active">
+      Login Sessions
     </a>
     
       
@@ -219,22 +231,15 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#use-the-redis-whitelist" class="md-nav__link">
-    Use the redis whitelist
+  <a href="#session-model" class="md-nav__link">
+    Session model
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#idle-timeout" class="md-nav__link">
-    Idle timeout
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#use-other-storage-backends" class="md-nav__link">
-    Use other storage backends
+  <a href="#session-whitelist" class="md-nav__link">
+    Session whitelist
   </a>
   
 </li>
@@ -243,18 +248,6 @@
   
 </nav>
     
-  </li>
-
-    
-      
-      
-      
-
-
-  <li class="md-nav__item">
-    <a href="../sessions/" title="Login Sessions" class="md-nav__link">
-      Login Sessions
-    </a>
   </li>
 
     
@@ -296,22 +289,15 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#use-the-redis-whitelist" class="md-nav__link">
-    Use the redis whitelist
+  <a href="#session-model" class="md-nav__link">
+    Session model
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#idle-timeout" class="md-nav__link">
-    Idle timeout
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#use-other-storage-backends" class="md-nav__link">
-    Use other storage backends
+  <a href="#session-whitelist" class="md-nav__link">
+    Session whitelist
   </a>
   
 </li>
@@ -332,94 +318,106 @@
                   
                 
                 
-                <h1 id="whitelist-and-revoke-tokens">Whitelist and revoke tokens</h1>
-<p>This optional feature gives you the option of revoking tokens on demand or after a
-certain <a href="#idle-timeout">idle timeout</a>. A revoked token will fail verification.</p>
-<p>This requires a database backend to store tokens. Support for Redis is built in,
-but you can also roll your own.</p>
-<p>The whitelist works by storing the token ID (<code>jti</code>) every time you generate a token.
-The token is stored until its expiry time (<code>exp</code>) or idle timeout has elapsed
-(if your token have no expiry time and you don't use idle timeout they will be stored forever)</p>
-<p>When you call <code>Jotbox.verified_payload</code> it always checks the whitelist.
-If the token is not in whitelist it raises a <code>jotbox.RevokedTokenerror</code></p>
-<h2 id="use-the-redis-whitelist">Use the redis whitelist</h2>
-<p>The built in redis whitelist is simple to use. Import it like this:</p>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">jotbox.whitelist.redis</span> <span class="kn">import</span> <span class="n">RedisWhitelist</span>
-</code></pre></div>
+                <h1 id="sessions">Sessions</h1>
+<p>The <code>SessionBox</code> class extends <code>JotBox</code> with features that
+are particularly useful for working with login sessions.</p>
+<p>It adds first-class support for the
+<a href="https://tools.ietf.org/html/rfc7519#section-4.1.2">subject</a> (<code>sub</code>) claim
+of JWT. That is often used to encode a user ID or username into a JWT.</p>
+<p>Currently id only adds support for revoking all tokens created for a 
+particular subject. E.g. you can use this for a "Log out on all devices" feature.</p>
+<p>Here is a quick example:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">import</span> <span class="nn">secrets</span>
+
+<span class="kn">from</span> <span class="nn">jotbox</span> <span class="kn">import</span> <span class="n">SessionBox</span><span class="p">,</span> <span class="n">Session</span><span class="p">,</span> <span class="n">RevokedTokenError</span>
+<span class="kn">from</span> <span class="nn">jotbox.whitelist.redis</span> <span class="kn">import</span> <span class="n">SessionRedisWhitelist</span>
 
 
-<p>Instantiate from redis URL:</p>
-<div class="codehilite"><pre><span></span><code><span class="o">...</span>
-<span class="n">my_whitelist</span> <span class="o">=</span> <span class="n">RedisWhitelist</span><span class="p">(</span><span class="s1">&#39;redis://localhost&#39;</span><span class="p">)</span>
-</code></pre></div>
+<span class="c1"># Create our session model</span>
+<span class="c1"># The `sub` claim is of type int, but you can use any type you want</span>
+<span class="n">UserSession</span> <span class="o">=</span> <span class="n">Session</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
 
-
-<p>If you want more control over how the redis connection pool
-is created, you can pass in an <code>aredis.StrictRedis</code> instance directly:</p>
-<div class="codehilite"><pre><span></span><code><span class="o">...</span>
-<span class="kn">from</span> <span class="nn">aredis</span> <span class="kn">import</span> <span class="n">StrictRedis</span>
-
-<span class="n">my_redis</span> <span class="o">=</span> <span class="n">StrictRedis</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
-<span class="n">my_whitelist</span> <span class="o">=</span> <span class="n">RedisWhitelist</span><span class="p">(</span><span class="n">my_redis</span><span class="p">)</span>
-</code></pre></div>
-
-
-<p>You can also set a custom key prefix if you'd like (the default prefix is <code>JB:WHITE:</code>):</p>
-<div class="codehilite"><pre><span></span><code><span class="n">my_whitelist</span> <span class="o">=</span> <span class="n">RedisWhitelist</span><span class="p">(</span><span class="n">my_redis</span><span class="p">,</span> <span class="n">key_prefix</span><span class="o">=</span><span class="s2">&quot;WHITELISTED_TOKEN:&quot;</span><span class="p">)</span>
-</code></pre></div>
-
-
-<p>Now pass your whitelist when creating the <code>Jotbox</code> instance:</p>
-<div class="codehilite"><pre><span></span><code><span class="n">jot</span> <span class="o">=</span> <span class="n">Jotbox</span><span class="p">[</span><span class="n">MyPayload</span><span class="p">](</span>
-    <span class="o">...</span><span class="p">,</span>
-    <span class="n">whitelist</span><span class="o">=</span><span class="n">my_whitelist</span>
+<span class="n">sessions</span> <span class="o">=</span> <span class="n">SessionBox</span><span class="p">[</span><span class="n">UserSession</span><span class="p">,</span> <span class="nb">int</span><span class="p">](</span>
+    <span class="n">encode_key</span><span class="o">=</span><span class="n">secrets</span><span class="o">.</span><span class="n">token_urlsafe</span><span class="p">(),</span>
+    <span class="n">payload_type</span><span class="o">=</span><span class="n">UserSession</span><span class="p">,</span>
+    <span class="n">whitelist</span><span class="o">=</span><span class="n">SessionRedisWhitelist</span><span class="p">(</span><span class="s2">&quot;redis://127.0.0.1&quot;</span><span class="p">),</span>
+    <span class="n">idle_timeout</span><span class="o">=</span><span class="mi">3600</span><span class="p">,</span>
+    <span class="n">expires_in</span><span class="o">=</span><span class="mi">24</span> <span class="o">*</span> <span class="mi">3600</span><span class="p">,</span>
+    <span class="n">leeway</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
 <span class="p">)</span>
+
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">run</span><span class="p">():</span>
+    <span class="n">token</span> <span class="o">=</span> <span class="k">await</span> <span class="n">sessions</span><span class="o">.</span><span class="n">create_token</span><span class="p">(</span><span class="n">sub</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+    <span class="n">encoded_token</span> <span class="o">=</span> <span class="n">token</span><span class="o">.</span><span class="n">token</span>
+
+    <span class="c1"># Verify the token</span>
+    <span class="k">await</span> <span class="n">sessions</span><span class="o">.</span><span class="n">verified_payload</span><span class="p">(</span><span class="n">encoded_token</span><span class="p">)</span>
+
+    <span class="c1"># Revoke all tokens for the user</span>
+    <span class="k">await</span> <span class="n">sessions</span><span class="o">.</span><span class="n">revoke_subject</span><span class="p">(</span><span class="n">token</span><span class="o">.</span><span class="n">payload</span><span class="o">.</span><span class="n">sub</span><span class="p">)</span>
+
+    <span class="c1"># Now verification fails</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">await</span> <span class="n">sessions</span><span class="o">.</span><span class="n">verified_payload</span><span class="p">(</span><span class="n">encoded_token</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">RevokedTokenError</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The token has been revoked&quot;</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+    <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">run</span><span class="p">())</span>
 </code></pre></div>
 
 
-<p>To revoke a token (e.g. when a user logs out), pass the verified payload to <code>revoke_payload</code>:</p>
-<div class="codehilite"><pre><span></span><code><span class="n">payload</span> <span class="o">=</span> <span class="k">await</span> <span class="n">jot</span><span class="o">.</span><span class="n">verified_payload</span><span class="p">(</span><span class="n">encoded_token</span><span class="p">)</span>
-<span class="k">await</span> <span class="n">jot</span><span class="o">.</span><span class="n">revoke_payload</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+<p>To break it down:</p>
+<h2 id="session-model">Session model</h2>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">jotbox</span> <span class="kn">import</span> <span class="n">Session</span>
+
+<span class="o">...</span>
+
+<span class="n">UserSession</span> <span class="o">=</span> <span class="n">Session</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
 </code></pre></div>
 
 
-<h2 id="idle-timeout">Idle timeout</h2>
-<p>The idle timeout setting tells <code>jotbox</code> to automatically delete
-tokens from the whitelist after a number of seconds of inactivity.</p>
-<p>When used in conjunction with <code>expires_at</code> the token is removed from whitelist
-once either the idle timeout or expiry time elapses, whichever happens first.</p>
-<p>This can be particularly useful for login sessions as it allows you to automatically log out the user after a period of inactivity while still allowing a long total expiry time on the session.</p>
-<p>To use this you need to pass both <code>idle_timeout</code> argument to <code>Jotbox</code> along with <code>whitelist</code>:</p>
-<div class="codehilite"><pre><span></span><code><span class="n">jot</span> <span class="o">=</span> <span class="n">Jotbox</span><span class="p">[</span><span class="n">MyPayload</span><span class="p">](</span>
-    <span class="o">...</span><span class="p">,</span>
-    <span class="n">expires_at</span><span class="o">=</span><span class="mi">3600</span><span class="o">*</span><span class="mi">24</span><span class="p">,</span> <span class="c1"># Expire after 24 hours when not idle</span>
-    <span class="n">idle_timeout</span><span class="o">=</span><span class="mi">3600</span><span class="p">,</span> <span class="c1"># Revoke after 1 hour of inactivity</span>
-    <span class="n">whitelist</span><span class="o">=</span><span class="n">my_whitelist</span>
-<span class="p">)</span>
+<p>This is the model for our payload that gets encded to JWT.
+This is the same as the default <a href="payload-model"><code>Payload</code></a>
+but adds one extra field <code>sub</code></p>
+<p>This is a generic class and you must specify the data type type of your sub claim.
+It can be any type you want, for example if your user IDs are uuids, you can use:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">uuid</span> <span class="kn">import</span> <span class="n">UUID</span>
+
+<span class="n">UserSession</span> <span class="o">=</span> <span class="n">Session</span><span class="p">[</span><span class="n">UUID</span><span class="p">]</span>
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code><span class="n">token</span> <span class="o">=</span> <span class="k">await</span> <span class="n">jot</span><span class="o">.</span><span class="n">create_token</span><span class="p">()</span>
-<span class="n">encoded_token</span> <span class="o">=</span> <span class="n">token</span><span class="o">.</span><span class="n">token</span>
+<p>You can also subclass and add extra fields as needed:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
 
-<span class="c1"># User sends the token in API call</span>
-<span class="n">valid_payload</span> <span class="o">=</span> <span class="k">await</span> <span class="n">jot</span><span class="o">.</span><span class="n">verified_payload</span><span class="p">(</span><span class="n">encoded_token</span><span class="p">)</span>
-<span class="c1"># Success</span>
-
-<span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3601</span><span class="p">)</span> <span class="c1"># No activity during idle timeout</span>
-
-<span class="k">await</span> <span class="n">jot</span><span class="o">.</span><span class="n">verified_payload</span><span class="p">(</span><span class="n">encoded_token</span><span class="p">)</span>
-<span class="c1"># raises RevokedTokenerror(...)</span>
+<span class="k">class</span> <span class="nc">UserSession</span><span class="p">(</span><span class="n">Session</span><span class="p">[</span><span class="n">UUID</span><span class="p">]):</span>
+    <span class="n">permissions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">email</span><span class="p">:</span> <span class="nb">str</span>
 </code></pre></div>
 
 
-<h2 id="use-other-storage-backends">Use other storage backends</h2>
-<p>You don't have to use redis for your whitelist.
-You can create a subclass of the abstract class <code>jotbox.whitelist.base.Whitelist</code> and use any database/storage method you want.</p>
-<p>You'll need to implement the <code>add</code>, <code>exists</code>, <code>touch</code> and <code>delete</code> methods.</p>
-<p>Check source code of the redis whitelist for a reference implementation.</p>
-<p>Note that with redis, expiry times are handled by redis itself. With other databases you may
-need to explicitly check and clean up expired tokens.</p>
+<h2 id="session-whitelist">Session whitelist</h2>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">jotbox.whitelist.redis</span> <span class="kn">import</span> <span class="n">SessionRedisWhitelist</span>
+
+<span class="o">...</span>
+    <span class="n">whitelist</span><span class="o">=</span><span class="n">SessionRedisWhitelist</span><span class="p">(</span><span class="s2">&quot;redis://127.0.0.1&quot;</span><span class="p">),</span>
+<span class="o">...</span>
+</code></pre></div>
+
+
+<p>This implementation of redis whitelist is extended from the regular <a href="whitelist-and-revoke-tokens">whitelist</a>.
+It includes the value of <code>sub</code> when storing tokens and adds the ability to delete
+all tokens of a given <code>sub</code>.</p>
+<p>You can also use a different storage method by creating your own whitelist class
+based on <code>jotbox.whitelist.base.SessionWhitelist</code> and implementing the
+<code>add</code>, <code>touch</code>, <code>exists</code>, <code>delete</code> and <code>delete_sub</code> methods.</p>
                 
               
               
@@ -438,7 +436,7 @@ need to explicitly check and clean up expired tokens.</p>
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
         
-          <a href="../payload-model/" title="Payload model" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../whitelist-and-revoke-tokens/" title="Whitelist and revoke tokens" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-footer-nav__button md-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
             </div>
@@ -447,19 +445,19 @@ need to explicitly check and clean up expired tokens.</p>
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Payload model
+                Whitelist and revoke tokens
               </div>
             </div>
           </a>
         
         
-          <a href="../sessions/" title="Login Sessions" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../config/" title="Configuration" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-footer-nav__title">
               <div class="md-ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Login Sessions
+                Configuration
               </div>
             </div>
             <div class="md-footer-nav__button md-icon">
