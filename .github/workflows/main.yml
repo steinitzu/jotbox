@@ -8,17 +8,34 @@ jobs:
     strategy:
       matrix:
         python-version: [3.7, 3.8]
+        redis-version: [5, 6]
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v1
+      - name: Git checkout
+        uses: actions/checkout@v2
+
+      - name: Setup python
+        uses: actions/setup-python@v1
         with:
           python-version: ${{ matrix.python-version }}
-      - uses: Gr1N/setup-poetry@v1
-      - uses: actions/cache@v1
+
+      - name: Setup redis
+        uses: supercharge/redis-github-action@1.1.0
+        with:
+          redis-version: ${{ matrix.redis-version }}
+
+      - name: Setup poetry
+        uses: Gr1N/setup-poetry@v1
+
+      - name: Dependency cache
+        uses: actions/cache@v1
         with:
           path: ~/.cache/pypoetry/virtualenvs
           key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
           restore-keys: |
             ${{ runner.os }}-poetry-
-      - run: poetry install
-      - run: poetry run pytest -v --cov=jotbox tests/
+      - name: Install dependencies
+        run: poetry install
+      - name: Run tests
+        run: poetry run pytest -v --cov=jotbox tests/
+        env:
+          TEST_REDIS_URL: redis://127.0.0.1
