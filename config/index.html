@@ -266,20 +266,20 @@ are accepted.</p>
 </li>
 <li>
 <p><strong><code>leeway</code></strong></p>
-<p>Default: 0</p>
+<p>Default: <code>0</code> (no leeway)</p>
 <p>Number of seconds of leeway to allow when verifying things 
 like expiry times and idle timeouts.<br />
 It can be good to set this to a few seconds to account for clock skew.</p>
 </li>
 <li>
 <p><strong><code>expires_in</code></strong></p>
-<p>Default: <code>None</code></p>
+<p>Default: <code>None</code> (no expiry)</p>
 <p>Number of seconds of how long new tokens are valid for. By default tokens never expire.</p>
 <p>The expiry time is encoded in the JWT as <code>exp</code> claim.</p>
 </li>
 <li>
 <p><strong><code>idle_timeout</code></strong></p>
-<p>Default: <code>None</code></p>
+<p>Default: <code>None</code> (no idle timeout)</p>
 <p>Number of seconds before a token is deleted from whitelist due to inactivity.
 This can only be used when <a href="./whitelist.md">whitelist</a> is provided.</p>
 </li>
@@ -291,7 +291,7 @@ Whitelisting is disabled when not provided.</p>
 </li>
 <li>
 <p><strong><code>jwt_options</code></strong></p>
-<p>Default: <code>{}</code></p>
+<p>Default: <code>{}</code> (default pyjwt options)</p>
 <p>Dict of options forwarded to <code>PyJWT.decode</code> when verifying tokens.</p>
 </li>
 </ul>
