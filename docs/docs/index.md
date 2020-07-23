@@ -1,8 +1,9 @@
 # Jotbox
 
 `Jotbox` is a library for generating and verifying JWTs in python
-providing a simple, safe and common interface for working with purely stateless JWTs or revokable tokens
-stored in a central whitelist.
+
+It provides a common interface for working with purely 
+stateless JWTs or revokable tokens stored in a central whitelist.
 
 ## Features
 
