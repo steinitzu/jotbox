@@ -1,8 +1,20 @@
 [tool.poetry]
 name = "jotbox"
 version = "0.1.0"
-description = ""
+description = "JWT library with support for revokable tokens"
 authors = ["Steinthor Palsson <steini90@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+classifiers = [
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Topic :: Security",
+  "Intended Audience :: Developers",
+  "Environment :: Web Environment"
+]
+
+[tool.poetry.urls]
+"Issue tracker" = "https://github.com/steinitzu/jotbox/issues"
+"Code" = "https://github.com/steinitzu/jotbox"
 
 [tool.poetry.dependencies]
 python = "^3.7"
