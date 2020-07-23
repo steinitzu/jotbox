@@ -1,7 +1,7 @@
 # The Payload model
 
-The Payload is a `pydantic` model to control and validate
-the info that's encoded into the JWT.
+The Payload is a [`pydantic`](https://pydantic-docs.helpmanual.io/) 
+model to control and validate the info that's encoded into JWTs.
 
 By default it contains the standard JWT claims: `jti`, `iat`, `exp` (optional)
 

@@ -1,20 +1,21 @@
-import os
 import asyncio
+import secrets
 
 from jotbox import Jotbox, Payload, TokenVerificationError
 from jotbox.whitelist.redis import RedisWhitelist
 
-
+# Define the payload model
 class AccessPayload(Payload):
     user_id: int
 
 
-jot = Jotbox[AccessPayload](  # Provide the payload type for static type safety
-    encode_key=os.environ["MY_ENCODE_KEY"],
+# Create our Jotbox instance with some settings
+jot = Jotbox[AccessPayload](
+    encode_key=secrets.token_hex(),
     payload_type=AccessPayload,
     leeway=10,
     expires_in=7200,  # Expire tokens after 2 hours (optional)
-    # Whitelist is optional
+    # Whitelist is optional, skip this if you don't need revoke support
     idle_timeout=600,  # Revoke token after 10 minutes without use
     whitelist=RedisWhitelist("redis://localhost"),
 )
@@ -35,7 +36,7 @@ async def run():
     print(payload)
     # >> AccessPayload(jti=UUID('d682eabf-...'), iat=1593638317, user_id=42)
 
-    # revoke the token (logout) (this requires whitelist)
+    # revoke the token (logout)
     await jot.revoke_payload(payload)
 
     try:

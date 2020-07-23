@@ -100,7 +100,7 @@ await jot.verified_payload(encoded_token)
 ## Use other storage backends
 
 You don't have to use redis for your whitelist.
-You can create a subclass of the abstract class `jotbox.whitelist.base.BaseWhitelist` and use any database/storage method you want.
+You can create a subclass of the abstract class `jotbox.whitelist.base.Whitelist` and use any database/storage method you want.
 
 You'll need to implement the `add`, `exists`, `touch` and `delete` methods.
 

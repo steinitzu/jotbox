@@ -1,17 +1,18 @@
-from typing import Union, Optional
+from typing import Union, Optional, Generic
 
 from aredis import StrictRedis
 
 
-from jotbox.types import TPayload, DateTimeStamp
+from jotbox.types import TPayload, DateTimeStamp, TSession, TSub
 from jotbox.util import timestamp_ms, now_ms
-from jotbox.whitelist.base import BaseWhitelist
+from jotbox.whitelist.base import Whitelist, SessionWhitelist
+from jotbox.util import achunked
 
 
 RedisOrURL = Union[StrictRedis, str]
 
 
-class RedisWhitelist(BaseWhitelist[TPayload]):
+class RedisWhitelist(Whitelist[TPayload]):
     def __init__(self, redis: RedisOrURL, key_prefix: str = "JB:WHITE:") -> None:
         self.key_prefix = key_prefix
         if isinstance(redis, str):
@@ -39,3 +40,17 @@ class RedisWhitelist(BaseWhitelist[TPayload]):
 
     def make_key(self, payload: TPayload) -> str:
         return self.key_prefix + payload.jti.hex
+
+
+class SessionRedisWhitelist(RedisWhitelist[TSession], SessionWhitelist[TSession, TSub]):
+    def make_key(self, payload: TSession) -> str:
+        return self.make_sub_key(payload.sub) + payload.jti.hex
+
+    def make_sub_key(self, sub: TSub) -> str:
+        return self.key_prefix + f"{sub}:"
+
+    async def delete_sub(self, sub: TSub) -> None:
+        async for keys in achunked(
+            self.redis.scan_iter(self.make_sub_key(sub) + "*"), 500
+        ):
+            await self.redis.delete(*keys)

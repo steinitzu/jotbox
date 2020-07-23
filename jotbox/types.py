@@ -32,3 +32,13 @@ class EncodedToken(GenericModel, Generic[TPayload]):
 
 
 DateTimeStamp = Union[datetime, float]
+
+
+TSub = TypeVar("TSub")
+
+
+class Session(GenericModel, Generic[TSub], Payload):
+    sub: TSub
+
+
+TSession = TypeVar("TSession", bound=Session)

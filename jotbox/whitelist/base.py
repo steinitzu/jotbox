@@ -1,10 +1,10 @@
 from abc import abstractmethod, ABC
 from typing import Optional, Generic
 
-from jotbox.types import TPayload, DateTimeStamp
+from jotbox.types import TPayload, DateTimeStamp, TSub, TSession
 
 
-class BaseWhitelist(ABC, Generic[TPayload]):
+class Whitelist(ABC, Generic[TPayload]):
     @abstractmethod
     async def add(self, payload: TPayload, until: Optional[DateTimeStamp]) -> None:
         """
@@ -46,4 +46,10 @@ class BaseWhitelist(ABC, Generic[TPayload]):
         """
         Immediately revoke the token from the whitelist
         """
+        pass
+
+
+class SessionWhitelist(Whitelist[TSession], Generic[TSession, TSub]):
+    @abstractmethod
+    async def delete_sub(self, sub: TSub) -> None:
         pass

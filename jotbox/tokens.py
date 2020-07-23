@@ -8,11 +8,13 @@ from jwt import decode as jwt_decode, encode as jwt_encode, PyJWTError
 
 from jotbox.types import EncodedToken, StrBytes, TPayload, Payload
 from jotbox.json import make_json_encoder
-from jotbox.whitelist.base import BaseWhitelist
+from jotbox.whitelist.base import Whitelist
 from jotbox.exceptions import TokenVerificationError, RevokedTokenError
 
 
 class Jotbox(Generic[TPayload]):
+    whitelist: Optional[Whitelist]
+
     def __init__(
         self,
         *,
@@ -24,7 +26,7 @@ class Jotbox(Generic[TPayload]):
         leeway: int = 0,
         expires_in: Optional[int] = None,
         idle_timeout: Optional[int] = None,
-        whitelist: Optional[BaseWhitelist[TPayload]] = None,
+        whitelist: Optional[Whitelist[TPayload]] = None,
         jwt_options: Dict[str, bool] = None,
     ) -> None:
         if idle_timeout is not None and whitelist is None:

@@ -5,7 +5,11 @@ from jotbox.types import (
     ExpiringPayload,
     Payload,
     EncodedToken,
+    TSub,
+    TSession,
+    Session,
 )
+from jotbox.sessions import SessionBox
 from jotbox.exceptions import (
     JotboxError,
     JWTDecodeError,

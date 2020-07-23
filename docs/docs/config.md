@@ -62,7 +62,7 @@
 
     Default: `None`
 
-    An instance of `jotbox.whitelist.base.BaseWhitelist` use as a storage backend for whitelisted tokens.
+    An instance of `jotbox.whitelist.base.Whitelist` use as a storage backend for whitelisted tokens.
     Whitelisting is disabled when not provided.
 
 

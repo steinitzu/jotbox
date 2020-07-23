@@ -2,8 +2,9 @@ site_name: JotBox
 nav:
   - Home: index.md
   - Payload model: payload-model.md
+  - Whitelist and revoke tokens: whitelist-and-revoke-tokens.md    
+  - Login Sessions: sessions.md    
   - Configuration: config.md
-  - Whitelist and revoke tokens: whitelist-and-revoke-tokens.md
 theme:
   name: material
   palette:
