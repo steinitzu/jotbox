@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "jotbox"
-version = "0.1.0"
+version = "0.1.1"
 description = "JWT library with support for revokable tokens"
 authors = ["Steinthor Palsson <steini90@gmail.com>"]
 license = "MIT"
