@@ -15,7 +15,7 @@ class Payload(BaseModel):
 
     jti: UUID
     iat: int
-    exp: Optional[int]
+    exp: Optional[int] = None
 
 
 class ExpiringPayload(Payload):
