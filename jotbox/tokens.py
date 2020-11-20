@@ -72,6 +72,13 @@ class Jotbox(Generic[TPayload]):
     async def create_token(
         self, _payload: Optional[TPayload] = None, **claims
     ) -> EncodedToken[TPayload]:
+        encoded = self.encode_payload(_payload=_payload, **claims)
+        await self.add_to_whitelist(encoded.payload)
+        return encoded
+
+    def encode_payload(
+        self, _payload: Optional[TPayload] = None, **claims
+    ) -> EncodedToken[TPayload]:
         payload = _payload or self.create_payload(**claims)
         token = jwt_encode(
             payload.dict(exclude_unset=True),
@@ -79,7 +86,6 @@ class Jotbox(Generic[TPayload]):
             algorithm=self.encode_algorithm,
             json_encoder=make_json_encoder(self.payload_type),
         ).decode()
-        await self.add_to_whitelist(payload)
         return self.encoded_token_type(token=token, payload=payload)
 
     async def verified_payload(self, token: str, **jwt_kwargs) -> TPayload:
