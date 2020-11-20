@@ -24,7 +24,7 @@ jobs:
           redis-version: ${{ matrix.redis-version }}
 
       - name: Setup poetry
-        uses: Gr1N/setup-poetry@v1
+        uses: Gr1N/setup-poetry@v4
 
       - name: Dependency cache
         uses: actions/cache@v1
