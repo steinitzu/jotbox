@@ -7,8 +7,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.8, 3.9, 3.10]
+        python-version: ["3.8", "3.9", "3.10"]
         redis-version: [5, 6]
+        pydantic-version: ["1.6.1", "2.6.1"]
     steps:
       - name: Git checkout
         uses: actions/checkout@v2
@@ -40,6 +41,7 @@ jobs:
 
       - name: Install dependencies
         run: poetry install
+        run: pip install pydantic==${{ matrix.pydantic-version }}
 
       - name: Flake8
         run: poetry run flake8 jotbox tests

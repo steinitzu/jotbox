@@ -10,6 +10,7 @@ from jotbox.types import EncodedToken, StrBytes, TPayload, Payload
 from jotbox.json import make_json_encoder
 from jotbox.whitelist.base import Whitelist
 from jotbox.exceptions import JWTDecodeError, RevokedTokenError
+from jotbox.compat import jsonable_model
 
 
 class Jotbox(Generic[TPayload]):
@@ -81,7 +82,7 @@ class Jotbox(Generic[TPayload]):
     ) -> EncodedToken[TPayload]:
         payload = _payload or self.create_payload(**claims)
         token = jwt_encode(
-            payload.dict(exclude_unset=True),
+            jsonable_model(payload, exclude_unset=True),
             key=self.encode_key,
             algorithm=self.encode_algorithm,
             json_encoder=make_json_encoder(self.payload_type),
