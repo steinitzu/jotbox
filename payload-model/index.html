@@ -1,6 +1,7 @@
 
 
 
+
 <!doctype html>
 <html lang="en" class="no-js">
   <head>
@@ -11,7 +12,7 @@
       
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.4.0">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-5.5.14">
     
     
       
@@ -19,14 +20,14 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.fe0cca5b.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.d3202873.min.css">
       
-        <link rel="stylesheet" href="../assets/stylesheets/palette.a46bcfb3.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ff0a5ce4.min.css">
       
       
         
         
-        <meta name="theme-color" content="#009688">
+        <meta name="theme-color" content="#009485">
       
     
     
@@ -270,7 +271,6 @@ E.g. add some user info and make expiry mandatory:</p>
     <span class="n">exp</span><span class="p">:</span> <span class="nb">int</span>
 </code></pre></div>
 
-
 <p>Pass this to jotbox and use it.</p>
 <div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">jotbox</span> <span class="kn">import</span> <span class="n">Jotbox</span>
 
@@ -282,7 +282,6 @@ E.g. add some user info and make expiry mandatory:</p>
 <span class="p">)</span>
 </code></pre></div>
 
-
 <blockquote>
 <p><strong>Note</strong>: the <code>[MyPayload]</code> part of <code>Jotbox[MyPayload]</code> is not required
 but gives you type safety and better code completion in your IDE</p>
@@ -293,7 +292,6 @@ but gives you type safety and better code completion in your IDE</p>
     <span class="n">permissions</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;articles-read&#39;</span><span class="p">,</span> <span class="s1">&#39;articles-publish&#39;</span><span class="p">]</span>
 <span class="p">)</span>
 </code></pre></div>
-
 
 <p>The arguments passed to <code>create_token</code> are validated with your payload model
 so passing invalid/wrong type arguments will fail.
@@ -374,15 +372,15 @@ on a case by case basis by passing your own timestamp:</p>
       
     </div>
     
-      <script src="../assets/javascripts/vendor.d710d30a.min.js"></script>
-      <script src="../assets/javascripts/bundle.b39636ac.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
+      <script src="../assets/javascripts/vendor.2d1db4bd.min.js"></script>
+      <script src="../assets/javascripts/bundle.6627ddf3.min.js"></script><script id="__lang" type="application/json">{"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching"}</script>
       
       <script>
         app = initialize({
           base: "..",
           features: [],
           search: Object.assign({
-            worker: "../assets/javascripts/worker/search.a68abb33.min.js"
+            worker: "../assets/javascripts/worker/search.5eca75d3.min.js"
           }, typeof search !== "undefined" && search)
         })
       </script>

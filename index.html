@@ -1,6 +1,7 @@
 
 
 
+
 <!doctype html>
 <html lang="en" class="no-js">
   <head>
@@ -11,7 +12,7 @@
       
       
       <link rel="shortcut icon" href="assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.4.0">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-5.5.14">
     
     
       
@@ -19,14 +20,14 @@
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.fe0cca5b.min.css">
+      <link rel="stylesheet" href="assets/stylesheets/main.d3202873.min.css">
       
-        <link rel="stylesheet" href="assets/stylesheets/palette.a46bcfb3.min.css">
+        <link rel="stylesheet" href="assets/stylesheets/palette.ff0a5ce4.min.css">
       
       
         
         
-        <meta name="theme-color" content="#009688">
+        <meta name="theme-color" content="#009485">
       
     
     
@@ -170,9 +171,7 @@
     
       <label class="md-nav__link md-nav__link--active" for="__toc">
         Home
-        <span class="md-nav__icon md-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9h14V7H3v2m0 4h14v-2H3v2m0 4h14v-2H3v2m16 0h2v-2h-2v2m0-10v2h2V7h-2m0 6h2v-2h-2v2z"/></svg>
-        </span>
+        <span class="md-nav__icon md-icon"></span>
       </label>
     
     <a href="." title="Home" class="md-nav__link md-nav__link--active">
@@ -187,9 +186,7 @@
   
   
     <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-      </span>
+      <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-scrollfix>
@@ -288,9 +285,7 @@
   
   
     <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-      </span>
+      <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-scrollfix>
@@ -340,19 +335,17 @@ stateless JWTs or revokable tokens stored in a central whitelist.</p>
 <ul>
 <li>All JWT encoding and decoding is done using the de-facto standard <a href="https://pyjwt.readthedocs.io">PyJWT</a> under the hood</li>
 <li>Optional JWT whitelist for revokable tokens (pluggable storage backend)</li>
-<li>Redis whitelist support is built in using <a href="https://aredis.readthedocs.io/en/latest/">aredis</a></li>
+<li>Redis whitelist support is built in using <a href="https://github.com/redis/redis-py">redis-py</a></li>
 <li>Optional idle timeout support to revoke tokens that are not accessed for a given interval</li>
 <li>Type safe, using generics for an extendable JWT payload model</li>
 </ul>
 <h2 id="install">Install</h2>
-<div class="codehilite"><pre><span></span><code><span class="err">pip install jotbox</span>
+<div class="codehilite"><pre><span></span><code>pip install jotbox
 </code></pre></div>
 
-
-<p>To use the included redis whitelist, you must install <code>aredis</code> as well:</p>
-<div class="codehilite"><pre><span></span><code><span class="err">pip install aredis</span>
+<p>To use the included redis whitelist, you must install <code>redis</code> as well:</p>
+<div class="codehilite"><pre><span></span><code>pip install redis
 </code></pre></div>
-
 
 <h2 id="quickstart">Quickstart</h2>
 <div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">asyncio</span>
@@ -407,7 +400,6 @@ stateless JWTs or revokable tokens stored in a central whitelist.</p>
 <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">run</span><span class="p">())</span>
 </code></pre></div>
 
-
 <p>See all possible settings in the <a href="config">configuration</a> section</p>
                 
               
@@ -461,15 +453,15 @@ stateless JWTs or revokable tokens stored in a central whitelist.</p>
       
     </div>
     
-      <script src="assets/javascripts/vendor.d710d30a.min.js"></script>
-      <script src="assets/javascripts/bundle.b39636ac.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
+      <script src="assets/javascripts/vendor.2d1db4bd.min.js"></script>
+      <script src="assets/javascripts/bundle.6627ddf3.min.js"></script><script id="__lang" type="application/json">{"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching"}</script>
       
       <script>
         app = initialize({
           base: ".",
           features: [],
           search: Object.assign({
-            worker: "assets/javascripts/worker/search.a68abb33.min.js"
+            worker: "assets/javascripts/worker/search.5eca75d3.min.js"
           }, typeof search !== "undefined" && search)
         })
       </script>

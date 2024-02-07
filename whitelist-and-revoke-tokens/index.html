@@ -1,6 +1,7 @@
 
 
 
+
 <!doctype html>
 <html lang="en" class="no-js">
   <head>
@@ -11,7 +12,7 @@
       
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.4.0">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-5.5.14">
     
     
       
@@ -19,14 +20,14 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.fe0cca5b.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.d3202873.min.css">
       
-        <link rel="stylesheet" href="../assets/stylesheets/palette.a46bcfb3.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ff0a5ce4.min.css">
       
       
         
         
-        <meta name="theme-color" content="#009688">
+        <meta name="theme-color" content="#009485">
       
     
     
@@ -194,9 +195,7 @@
     
       <label class="md-nav__link md-nav__link--active" for="__toc">
         Whitelist and revoke tokens
-        <span class="md-nav__icon md-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9h14V7H3v2m0 4h14v-2H3v2m0 4h14v-2H3v2m16 0h2v-2h-2v2m0-10v2h2V7h-2m0 6h2v-2h-2v2z"/></svg>
-        </span>
+        <span class="md-nav__icon md-icon"></span>
       </label>
     
     <a href="./" title="Whitelist and revoke tokens" class="md-nav__link md-nav__link--active">
@@ -211,9 +210,7 @@
   
   
     <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-      </span>
+      <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-scrollfix>
@@ -288,9 +285,7 @@
   
   
     <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-      </span>
+      <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-scrollfix>
@@ -347,27 +342,23 @@ If the token is not in whitelist it raises a <code>jotbox.RevokedTokenerror</cod
 <div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">jotbox.whitelist.redis</span> <span class="kn">import</span> <span class="n">RedisWhitelist</span>
 </code></pre></div>
 
-
 <p>Instantiate from redis URL:</p>
 <div class="codehilite"><pre><span></span><code><span class="o">...</span>
 <span class="n">my_whitelist</span> <span class="o">=</span> <span class="n">RedisWhitelist</span><span class="p">(</span><span class="s1">&#39;redis://localhost&#39;</span><span class="p">)</span>
 </code></pre></div>
 
-
 <p>If you want more control over how the redis connection pool
-is created, you can pass in an <code>aredis.StrictRedis</code> instance directly:</p>
+is created, you can pass in an <code>redis.asyncio.Redis</code> instance directly:</p>
 <div class="codehilite"><pre><span></span><code><span class="o">...</span>
-<span class="kn">from</span> <span class="nn">aredis</span> <span class="kn">import</span> <span class="n">StrictRedis</span>
+<span class="kn">from</span> <span class="nn">redis.asyncio</span> <span class="kn">import</span> <span class="n">Redis</span>
 
-<span class="n">my_redis</span> <span class="o">=</span> <span class="n">StrictRedis</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">my_redis</span> <span class="o">=</span> <span class="n">Redis</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
 <span class="n">my_whitelist</span> <span class="o">=</span> <span class="n">RedisWhitelist</span><span class="p">(</span><span class="n">my_redis</span><span class="p">)</span>
 </code></pre></div>
-
 
 <p>You can also set a custom key prefix if you'd like (the default prefix is <code>JB:WHITE:</code>):</p>
 <div class="codehilite"><pre><span></span><code><span class="n">my_whitelist</span> <span class="o">=</span> <span class="n">RedisWhitelist</span><span class="p">(</span><span class="n">my_redis</span><span class="p">,</span> <span class="n">key_prefix</span><span class="o">=</span><span class="s2">&quot;WHITELISTED_TOKEN:&quot;</span><span class="p">)</span>
 </code></pre></div>
-
 
 <p>Now pass your whitelist when creating the <code>Jotbox</code> instance:</p>
 <div class="codehilite"><pre><span></span><code><span class="n">jot</span> <span class="o">=</span> <span class="n">Jotbox</span><span class="p">[</span><span class="n">MyPayload</span><span class="p">](</span>
@@ -376,12 +367,10 @@ is created, you can pass in an <code>aredis.StrictRedis</code> instance directly
 <span class="p">)</span>
 </code></pre></div>
 
-
 <p>To revoke a token (e.g. when a user logs out), pass the verified payload to <code>revoke_payload</code>:</p>
 <div class="codehilite"><pre><span></span><code><span class="n">payload</span> <span class="o">=</span> <span class="k">await</span> <span class="n">jot</span><span class="o">.</span><span class="n">verified_payload</span><span class="p">(</span><span class="n">encoded_token</span><span class="p">)</span>
 <span class="k">await</span> <span class="n">jot</span><span class="o">.</span><span class="n">revoke_payload</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
 </code></pre></div>
-
 
 <h2 id="idle-timeout">Idle timeout</h2>
 <p>The idle timeout setting tells <code>jotbox</code> to automatically delete
@@ -398,7 +387,6 @@ once either the idle timeout or expiry time elapses, whichever happens first.</p
 <span class="p">)</span>
 </code></pre></div>
 
-
 <div class="codehilite"><pre><span></span><code><span class="n">token</span> <span class="o">=</span> <span class="k">await</span> <span class="n">jot</span><span class="o">.</span><span class="n">create_token</span><span class="p">()</span>
 <span class="n">encoded_token</span> <span class="o">=</span> <span class="n">token</span><span class="o">.</span><span class="n">token</span>
 
@@ -411,7 +399,6 @@ once either the idle timeout or expiry time elapses, whichever happens first.</p
 <span class="k">await</span> <span class="n">jot</span><span class="o">.</span><span class="n">verified_payload</span><span class="p">(</span><span class="n">encoded_token</span><span class="p">)</span>
 <span class="c1"># raises RevokedTokenerror(...)</span>
 </code></pre></div>
-
 
 <h2 id="use-other-storage-backends">Use other storage backends</h2>
 <p>You don't have to use redis for your whitelist.
@@ -486,15 +473,15 @@ need to explicitly check and clean up expired tokens.</p>
       
     </div>
     
-      <script src="../assets/javascripts/vendor.d710d30a.min.js"></script>
-      <script src="../assets/javascripts/bundle.b39636ac.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
+      <script src="../assets/javascripts/vendor.2d1db4bd.min.js"></script>
+      <script src="../assets/javascripts/bundle.6627ddf3.min.js"></script><script id="__lang" type="application/json">{"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching"}</script>
       
       <script>
         app = initialize({
           base: "..",
           features: [],
           search: Object.assign({
-            worker: "../assets/javascripts/worker/search.a68abb33.min.js"
+            worker: "../assets/javascripts/worker/search.5eca75d3.min.js"
           }, typeof search !== "undefined" && search)
         })
       </script>

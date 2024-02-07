@@ -1,6 +1,7 @@
 
 
 
+
 <!doctype html>
 <html lang="en" class="no-js">
   <head>
@@ -11,7 +12,7 @@
       
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.4.0">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-5.5.14">
     
     
       
@@ -19,14 +20,14 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.fe0cca5b.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.d3202873.min.css">
       
-        <link rel="stylesheet" href="../assets/stylesheets/palette.a46bcfb3.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ff0a5ce4.min.css">
       
       
         
         
-        <meta name="theme-color" content="#009688">
+        <meta name="theme-color" content="#009485">
       
     
     
@@ -206,9 +207,7 @@
     
       <label class="md-nav__link md-nav__link--active" for="__toc">
         Login Sessions
-        <span class="md-nav__icon md-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9h14V7H3v2m0 4h14v-2H3v2m0 4h14v-2H3v2m16 0h2v-2h-2v2m0-10v2h2V7h-2m0 6h2v-2h-2v2z"/></svg>
-        </span>
+        <span class="md-nav__icon md-icon"></span>
       </label>
     
     <a href="./" title="Login Sessions" class="md-nav__link md-nav__link--active">
@@ -223,9 +222,7 @@
   
   
     <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-      </span>
+      <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-scrollfix>
@@ -281,9 +278,7 @@
   
   
     <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-      </span>
+      <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-scrollfix>
@@ -372,7 +367,6 @@ particular subject. E.g. you can use this for a "Log out on all devices" feature
     <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">run</span><span class="p">())</span>
 </code></pre></div>
 
-
 <p>To break it down:</p>
 <h2 id="session-model">Session model</h2>
 <div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">jotbox</span> <span class="kn">import</span> <span class="n">Session</span>
@@ -381,7 +375,6 @@ particular subject. E.g. you can use this for a "Log out on all devices" feature
 
 <span class="n">UserSession</span> <span class="o">=</span> <span class="n">Session</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
 </code></pre></div>
-
 
 <p>This is the model for our payload that gets encded to JWT.
 This is the same as the default <a href="payload-model"><code>Payload</code></a>
@@ -393,7 +386,6 @@ It can be any type you want, for example if your user IDs are uuids, you can use
 <span class="n">UserSession</span> <span class="o">=</span> <span class="n">Session</span><span class="p">[</span><span class="n">UUID</span><span class="p">]</span>
 </code></pre></div>
 
-
 <p>You can also subclass and add extra fields as needed:</p>
 <div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
 
@@ -402,7 +394,6 @@ It can be any type you want, for example if your user IDs are uuids, you can use
     <span class="n">email</span><span class="p">:</span> <span class="nb">str</span>
 </code></pre></div>
 
-
 <h2 id="session-whitelist">Session whitelist</h2>
 <div class="codehilite"><pre><span></span><code><span class="kn">from</span> <span class="nn">jotbox.whitelist.redis</span> <span class="kn">import</span> <span class="n">SessionRedisWhitelist</span>
 
@@ -410,7 +401,6 @@ It can be any type you want, for example if your user IDs are uuids, you can use
     <span class="n">whitelist</span><span class="o">=</span><span class="n">SessionRedisWhitelist</span><span class="p">(</span><span class="s2">&quot;redis://127.0.0.1&quot;</span><span class="p">),</span>
 <span class="o">...</span>
 </code></pre></div>
-
 
 <p>This implementation of redis whitelist is extended from the regular <a href="whitelist-and-revoke-tokens">whitelist</a>.
 It includes the value of <code>sub</code> when storing tokens and adds the ability to delete
@@ -484,15 +474,15 @@ based on <code>jotbox.whitelist.base.SessionWhitelist</code> and implementing th
       
     </div>
     
-      <script src="../assets/javascripts/vendor.d710d30a.min.js"></script>
-      <script src="../assets/javascripts/bundle.b39636ac.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
+      <script src="../assets/javascripts/vendor.2d1db4bd.min.js"></script>
+      <script src="../assets/javascripts/bundle.6627ddf3.min.js"></script><script id="__lang" type="application/json">{"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching"}</script>
       
       <script>
         app = initialize({
           base: "..",
           features: [],
           search: Object.assign({
-            worker: "../assets/javascripts/worker/search.a68abb33.min.js"
+            worker: "../assets/javascripts/worker/search.5eca75d3.min.js"
           }, typeof search !== "undefined" && search)
         })
       </script>
