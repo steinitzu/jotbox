@@ -47,6 +47,8 @@ jobs:
 
       - name: Install dependencies
         run: poetry install
+
+      - name: Install Pydantic
         run: pip install pydantic==${{ matrix.pydantic-version }}
 
       - name: Flake8
