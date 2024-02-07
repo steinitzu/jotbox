@@ -29,13 +29,13 @@ my_whitelist = RedisWhitelist('redis://localhost')
 ```
 
 If you want more control over how the redis connection pool
-is created, you can pass in an `aredis.StrictRedis` instance directly:
+is created, you can pass in an `redis.asyncio.Redis` instance directly:
 
 ```python3
 ...
-from aredis import StrictRedis
+from redis.asyncio import Redis
 
-my_redis = StrictRedis(...)
+my_redis = Redis(...)
 my_whitelist = RedisWhitelist(my_redis)
 ```
 

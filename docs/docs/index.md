@@ -9,7 +9,7 @@ stateless JWTs or revokable tokens stored in a central whitelist.
 
 * All JWT encoding and decoding is done using the de-facto standard [PyJWT](https://pyjwt.readthedocs.io) under the hood
 * Optional JWT whitelist for revokable tokens (pluggable storage backend)
-* Redis whitelist support is built in using [aredis](https://aredis.readthedocs.io/en/latest/)
+* Redis whitelist support is built in using [redis-py](https://github.com/redis/redis-py)
 * Optional idle timeout support to revoke tokens that are not accessed for a given interval
 * Type safe, using generics for an extendable JWT payload model
 
@@ -20,10 +20,10 @@ stateless JWTs or revokable tokens stored in a central whitelist.
 pip install jotbox
 ```
 
-To use the included redis whitelist, you must install `aredis` as well:
+To use the included redis whitelist, you must install `redis` as well:
 
 ```
-pip install aredis
+pip install redis
 ```
 
 ## Quickstart
