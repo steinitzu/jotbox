@@ -2,9 +2,9 @@ import pytest
 import secrets
 import time
 
-from aredis import StrictRedis
+from redis.asyncio import Redis
 
-from jotbox import Jotbox
+from jotbox import Jotbox, Payload
 from jotbox.whitelist.redis import RedisWhitelist
 
 
@@ -20,9 +20,9 @@ def jti_key(jti):
 class TestRedisWhitelist:
     def test__create_whitelist_from_url(self, redis_uri):
 
-        wl = RedisWhitelist(redis_uri)
+        wl = RedisWhitelist[Payload](redis_uri)
 
-        assert isinstance(wl.redis, StrictRedis)
+        assert isinstance(wl.redis, Redis)
 
     @pytest.mark.asyncio
     async def test__add__adds_key(self, redis_jotbox):
@@ -58,7 +58,7 @@ class TestRedisWhitelist:
 
         until_touch = time.time() + 20
         ret = await whitelist.touch(payload, until_touch)
-        exists = await whitelist.redis.exists(jti_key(payload.jti))
+        exists = bool(await whitelist.redis.exists(jti_key(payload.jti)))
 
         assert ret is False and exists is False
 
@@ -89,4 +89,4 @@ class TestRedisWhitelist:
 
         await whitelist.delete(payload)
 
-        assert await whitelist.redis.exists(jti_key(payload.jti)) is False
+        assert bool(await whitelist.redis.exists(jti_key(payload.jti))) is False

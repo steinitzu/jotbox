@@ -1,6 +1,6 @@
 from typing import Union, Optional
 
-from aredis import StrictRedis
+from redis.asyncio import Redis
 
 
 from jotbox.types import TPayload, DateTimeStamp, TSession, TSub
@@ -9,14 +9,14 @@ from jotbox.whitelist.base import Whitelist, SessionWhitelist
 from jotbox.util import achunked
 
 
-RedisOrURL = Union[StrictRedis, str]
+RedisOrURL = Union[Redis, str]
 
 
 class RedisWhitelist(Whitelist[TPayload]):
     def __init__(self, redis: RedisOrURL, key_prefix: str = "JB:WHITE:") -> None:
         self.key_prefix = key_prefix
         if isinstance(redis, str):
-            self.redis = StrictRedis.from_url(redis)
+            self.redis = Redis.from_url(redis)
         else:
             self.redis = redis
 

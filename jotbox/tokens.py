@@ -27,7 +27,7 @@ class Jotbox(Generic[TPayload]):
         expires_in: Optional[int] = None,
         idle_timeout: Optional[int] = None,
         whitelist: Optional[Whitelist[TPayload]] = None,
-        jwt_options: Dict[str, bool] = None,
+        jwt_options: Optional[Dict[str, bool]] = None,
     ) -> None:
         if idle_timeout is not None and whitelist is None:
             raise ValueError("idle_timeout is not possible without whitelist")
