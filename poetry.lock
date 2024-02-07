@@ -381,16 +381,20 @@ testing = ["coverage", "pyyaml"]
 
 [[package]]
 name = "markdown-include"
-version = "0.5.1"
-description = "This is an extension to Python-Markdown which provides an \"include\" function, similar to that found in LaTeX (and also the C pre-processor and Fortran). I originally wrote it for my FORD Fortran auto-documentation generator."
+version = "0.8.1"
+description = "A Python-Markdown extension which provides an 'include' function"
 optional = false
-python-versions = "*"
+python-versions = ">=3.7"
 files = [
-    {file = "markdown-include-0.5.1.tar.gz", hash = "sha256:72a45461b589489a088753893bc95c5fa5909936186485f4ed55caa57d10250f"},
+    {file = "markdown-include-0.8.1.tar.gz", hash = "sha256:1d0623e0fc2757c38d35df53752768356162284259d259c486b4ab6285cdbbe3"},
+    {file = "markdown_include-0.8.1-py3-none-any.whl", hash = "sha256:32f0635b9cfef46997b307e2430022852529f7a5b87c0075c504283e7cc7db53"},
 ]
 
 [package.dependencies]
-markdown = "*"
+markdown = ">=3.0"
+
+[package.extras]
+tests = ["pytest"]
 
 [[package]]
 name = "markupsafe"
@@ -1160,4 +1164,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "08a3aee284ead497b2a434e43728a09b2e45d2f57b3234f50944e3764ce0a39d"
+content-hash = "390aa578ef43bb1ae9071a40ed0b51ff4617340559f4b522ff17695f39ed904f"
