@@ -11,7 +11,7 @@ class TestSessionModel:
     def test__sub_type__no_subclass(self):
         S = Session[int]
 
-        s = S(jti=uuid4(), iat=time.time(), sub=42)
+        s = S(jti=uuid4(), iat=int(time.time()), sub=42)
 
         assert isinstance(s.jti, UUID)
         assert isinstance(s.iat, int)
@@ -23,7 +23,7 @@ class TestSessionModel:
             exp: int
 
         with pytest.raises(ValidationError) as einfo:
-            S(jti=uuid4(), iat=time.time(), sub=42)
+            S(jti=uuid4(), iat=int(time.time()), sub=42)  # type: ignore[call-arg]
 
         assert einfo.value.errors()[0]["loc"] == ("exp",)
 
@@ -31,7 +31,7 @@ class TestSessionModel:
         class S(Session[int]):
             exp: int
 
-        s = S(jti=uuid4(), iat=time.time(), sub=42, exp=time.time())
+        s = S(jti=uuid4(), iat=int(time.time()), sub=42, exp=int(time.time()))
 
         assert isinstance(s.jti, UUID)
         assert isinstance(s.iat, int)
