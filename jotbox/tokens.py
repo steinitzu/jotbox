@@ -86,7 +86,7 @@ class Jotbox(Generic[TPayload]):
             key=self.encode_key,
             algorithm=self.encode_algorithm,
             json_encoder=make_json_encoder(self.payload_type),
-        ).decode()
+        )
         return self.encoded_token_type(token=token, payload=payload)
 
     async def verified_payload(self, token: str, **jwt_kwargs) -> TPayload:
