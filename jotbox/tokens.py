@@ -36,7 +36,7 @@ class Jotbox(Generic[TPayload]):
         self.encode_key = encode_key
         self.decode_key = decode_key if decode_key is not None else encode_key
         self.encode_algorithm = encode_algorithm
-        self.decode_algorithms = decode_algorithms
+        self.decode_algorithms = list(decode_algorithms)
         self.leeway = leeway
         self.expires_in = expires_in
         self.idle_timeout = idle_timeout
