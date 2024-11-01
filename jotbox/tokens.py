@@ -36,7 +36,7 @@ class Jotbox(Generic[TPayload]):
         self.encode_key = encode_key
         self.decode_key = decode_key if decode_key is not None else encode_key
         self.encode_algorithm = encode_algorithm
-        self.decode_algorithms = decode_algorithms
+        self.decode_algorithms = list(decode_algorithms)
         self.leeway = leeway
         self.expires_in = expires_in
         self.idle_timeout = idle_timeout
@@ -86,7 +86,7 @@ class Jotbox(Generic[TPayload]):
             key=self.encode_key,
             algorithm=self.encode_algorithm,
             json_encoder=make_json_encoder(self.payload_type),
-        ).decode()
+        )
         return self.encoded_token_type(token=token, payload=payload)
 
     async def verified_payload(self, token: str, **jwt_kwargs) -> TPayload:

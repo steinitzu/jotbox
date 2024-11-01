@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "jotbox"
 version = "0.3.0"
-description = "JWT library with support for revokable tokens"
+description = "JWTxb library with support for revokable tokens"
 authors = ["Steinthor Palsson <steini90@gmail.com>"]
 license = "MIT"
 readme = "README.md"
@@ -19,7 +19,7 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.8"
 pydantic = ">=1,<3"
-pyjwt = "^1"
+pyjwt = "^2"
 
 [tool.poetry.dev-dependencies]
 mypy = "^1"
@@ -37,7 +37,6 @@ pytest-cov = "^2.10.0"
 [tool.poetry.group.dev.dependencies]
 redis = "^5.0.1"
 types-redis = "^4.6.0.20240106"
-types-jwt = "^0.1.3"
 
 [tool.mypy]
 python_version = "3.8"
